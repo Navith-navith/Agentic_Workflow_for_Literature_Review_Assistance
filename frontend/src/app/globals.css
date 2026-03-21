@@ -1,0 +1,156 @@
+/* globals.css — Base styles, CSS variables, and custom utilities */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Design tokens ────────────────────────────────────────────── */
+:root {
+  --bg-base:        #0b0e18;
+  --bg-card:        #111520;
+  --bg-card-hover:  #161c2e;
+  --border:         #1e2a42;
+  --border-subtle:  #162035;
+  --brand:          #38bdf8;
+  --brand-dim:      #0ea5e9;
+  --brand-glow:     rgba(56, 189, 248, 0.15);
+  --text-primary:   #e2e8f0;
+  --text-secondary: #94a3b8;
+  --text-muted:     #475569;
+  --success:        #34d399;
+  --warning:        #fbbf24;
+  --error:          #f87171;
+}
+
+/* ── Base ─────────────────────────────────────────────────────── */
+html, body {
+  background-color: var(--bg-base);
+  color:            var(--text-primary);
+  font-family:      var(--font-geist-sans), system-ui, sans-serif;
+  height:           100%;
+  overflow:         hidden;
+}
+
+#__next { height: 100%; }
+
+/* ── Scrollbar ───────────────────────────────────────────────── */
+::-webkit-scrollbar        { width: 5px; }
+::-webkit-scrollbar-track  { background: transparent; }
+::-webkit-scrollbar-thumb  { background: var(--border); border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: var(--brand-dim); }
+
+/* ── Prose reset for markdown ────────────────────────────────── */
+.prose-dark {
+  color: var(--text-primary);
+  line-height: 1.75;
+}
+.prose-dark h1,
+.prose-dark h2,
+.prose-dark h3 {
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  margin-top: 1.25em;
+  margin-bottom: 0.5em;
+}
+.prose-dark p      { margin-bottom: 0.875em; }
+.prose-dark strong { color: var(--brand); }
+.prose-dark em     { color: var(--text-secondary); }
+.prose-dark ul,
+.prose-dark ol     { padding-left: 1.5em; margin-bottom: 0.875em; }
+.prose-dark li     { margin-bottom: 0.25em; }
+.prose-dark code {
+  background: rgba(56,189,248,0.08);
+  color:       var(--brand);
+  padding:     0.1em 0.4em;
+  border-radius: 4px;
+  font-family: var(--font-geist-mono);
+  font-size:   0.875em;
+}
+.prose-dark pre {
+  background: #0d1117;
+  border:     1px solid var(--border);
+  border-radius: 8px;
+  padding:    1em;
+  overflow-x: auto;
+  margin:     1em 0;
+}
+.prose-dark pre code {
+  background: transparent;
+  padding:    0;
+}
+.prose-dark table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1em 0;
+  font-size: 0.875em;
+}
+.prose-dark th {
+  background:    var(--bg-card);
+  border:        1px solid var(--border);
+  padding:       0.5em 0.75em;
+  text-align:    left;
+  color:         var(--brand);
+  font-weight:   600;
+}
+.prose-dark td {
+  border:    1px solid var(--border-subtle);
+  padding:   0.5em 0.75em;
+  color:     var(--text-secondary);
+}
+.prose-dark tr:hover td { background: var(--bg-card-hover); }
+.prose-dark blockquote {
+  border-left: 3px solid var(--brand-dim);
+  padding-left: 1em;
+  color: var(--text-secondary);
+  margin: 1em 0;
+  font-style: italic;
+}
+
+/* ── Animations ──────────────────────────────────────────────── */
+@keyframes fadeIn  { from { opacity:0 }           to { opacity:1 } }
+@keyframes slideUp { from { opacity:0; transform:translateY(12px) } to { opacity:1; transform:translateY(0) } }
+@keyframes shimmer {
+  0%   { background-position: -200% 0 }
+  100% { background-position:  200% 0 }
+}
+@keyframes breathe {
+  0%, 100% { opacity: 0.4; transform: scale(1)   }
+  50%       { opacity: 0.8; transform: scale(1.05) }
+}
+@keyframes spin { to { transform: rotate(360deg) } }
+
+.animate-fade-in  { animation: fadeIn  0.35s ease both }
+.animate-slide-up { animation: slideUp 0.35s ease both }
+
+.shimmer-loading {
+  background: linear-gradient(
+    90deg,
+    var(--bg-card) 25%,
+    var(--border)  50%,
+    var(--bg-card) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+
+/* ── Glow effect on brand elements ──────────────────────────── */
+.brand-glow {
+  box-shadow: 0 0 24px var(--brand-glow), 0 0 8px var(--brand-glow);
+}
+.text-glow {
+  text-shadow: 0 0 20px rgba(56,189,248,0.4);
+}
+
+/* ── Glass card ──────────────────────────────────────────────── */
+.glass {
+  background:  rgba(17, 21, 32, 0.8);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+}
+
+/* ── Dot grid background ─────────────────────────────────────── */
+.dot-grid {
+  background-image: radial-gradient(circle, #1e2a42 1px, transparent 1px);
+  background-size: 28px 28px;
+}

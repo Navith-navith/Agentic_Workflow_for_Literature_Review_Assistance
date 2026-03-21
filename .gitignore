@@ -1,0 +1,22 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# Env files
+.env
+
+# Data (optional - recommended)
+backend/data/uploads/
+backend/data/vector_store/
+
+# Node / Frontend
+node_modules/
+.next/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

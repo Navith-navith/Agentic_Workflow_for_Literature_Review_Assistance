@@ -1,0 +1,41 @@
+version: "3.9"
+
+# docker-compose.yml — Run the full stack with one command:
+# docker-compose up --build
+#
+# Make sure to set GROQ_API_KEY in your shell environment
+# or create backend/.env before running.
+
+services:
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/data:/app/data    # Persist uploads and vector store
+    environment:
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - VECTOR_STORE_TYPE=faiss
+      - UPLOAD_DIR=/app/data/uploads
+      - VECTOR_STORE_DIR=/app/data/vector_store
+      - CORS_ORIGINS=["http://localhost:3000"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    depends_on:
+      backend:
+        condition: service_healthy

@@ -1,0 +1,33 @@
+# ── Web framework ─────────────────────────────────────────────
+fastapi==0.111.0
+uvicorn[standard]==0.30.1
+python-multipart==0.0.9
+pydantic==2.7.4
+pydantic-settings==2.3.4
+
+# ── PDF processing ────────────────────────────────────────────
+pypdf2==3.0.1
+pdfplumber==0.11.1
+
+# ── Embeddings & Vector Store ─────────────────────────────────
+# sentence-transformers 3.x requires transformers>=4.38; use a newer version
+# that is tested against Python 3.13 + numpy 2.x
+sentence-transformers>=2.7.0
+faiss-cpu>=1.9.0
+chromadb>=0.5.3
+
+# ── BM25 keyword search ───────────────────────────────────────
+rank-bm25==0.2.2
+nltk==3.9.1
+
+# ── LLM ──────────────────────────────────────────────────────
+groq>=0.9.0
+
+# ── Utilities ─────────────────────────────────────────────────
+# numpy: Python 3.13 only ships numpy 2.x wheels; faiss-cpu 1.13+ works with numpy 2
+numpy>=2.0
+python-dotenv==1.0.1
+httpx>=0.27.0
+aiofiles==23.2.1
+loguru==0.7.2
+tenacity==8.3.0
