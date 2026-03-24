@@ -3,7 +3,7 @@
 // app/page.tsx — Root page: wires Sidebar + ChatWindow + ChatInput
 
 import { useState, useCallback, useEffect } from "react";
-import { v4 as uuid } from "crypto";
+//import { v4 as uuid } from "crypto";
 
 import Sidebar    from "@/components/layout/Sidebar";
 import ChatWindow from "@/components/chat/ChatWindow";
