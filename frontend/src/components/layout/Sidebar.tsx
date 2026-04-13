@@ -122,11 +122,11 @@ export default function Sidebar({
         <div className="flex items-center gap-2 mb-1">
           <Cpu className="w-5 h-5 text-[var(--brand)]" />
           <span className="font-display text-lg text-[var(--text-primary)] tracking-tight">
-            MedRAG
+            Agentic Literature Assistant
           </span>
         </div>
         <p className="text-xs text-[var(--text-muted)]">
-          Healthcare Research Intelligence
+          Automated literature review assistance for research workflows
         </p>
       </div>
 

@@ -3,17 +3,22 @@
 // components/chat/ChatWindow.tsx
 // Scrollable message list with welcome screen
 
-import { useEffect, useRef } from "react";
+import { ReactNode, useEffect, useRef } from "react";
 import { Brain, Zap, FileSearch, GitCompare } from "lucide-react";
 import { ChatMessage, DocumentInfo } from "@/types";
 import MessageBubble from "./MessageBubble";
 
 interface ChatWindowProps {
-  messages:  ChatMessage[];
-  documents: DocumentInfo[];
+  messages:            ChatMessage[];
+  documents:           DocumentInfo[];
+  footer?:             ReactNode;
+  onToggleResults?:    () => void;
+  showResultsPanel?:   boolean;
+  openSourceMessageId?: string | null;
+  onToggleSource?:     (messageId: string | null) => void;
 }
 
-export default function ChatWindow({ messages, documents }: ChatWindowProps) {
+export default function ChatWindow({ messages, documents, footer, onToggleResults, showResultsPanel, openSourceMessageId, onToggleSource }: ChatWindowProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to bottom on new messages
@@ -24,14 +29,22 @@ export default function ChatWindow({ messages, documents }: ChatWindowProps) {
   const isEmpty = messages.length === 0;
 
   return (
-    <div className="flex-1 overflow-y-auto px-4 py-6 space-y-5">
+    <div className="flex-1 overflow-y-auto px-4 py-6 space-y-5 pb-32">
       {isEmpty ? (
         <WelcomeScreen hasDocuments={documents.length > 0} />
       ) : (
         <>
           {messages.map((msg) => (
-            <MessageBubble key={msg.id} message={msg} />
+            <MessageBubble
+              key={msg.id}
+              message={msg}
+              onToggleResults={onToggleResults}
+              showResultsPanel={showResultsPanel}
+              showSources={msg.id === openSourceMessageId}
+              onToggleSources={onToggleSource}
+            />
           ))}
+          {footer}
           <div ref={bottomRef} />
         </>
       )}
@@ -60,11 +73,11 @@ function WelcomeScreen({ hasDocuments }: { hasDocuments: boolean }) {
       {/* Headline */}
       <div className="space-y-2">
         <h1 className="font-display text-3xl text-[var(--text-primary)] text-glow">
-          Healthcare Research Intelligence
+          Agentic Workflow for Automated Literature Review Assistance
         </h1>
-        <p className="text-[var(--text-secondary)] max-w-md text-sm">
-          An agent-based hybrid RAG system for exploring, summarising, and
-          comparing healthcare engineering research papers.
+        <p className="text-[var(--text-secondary)]  text-sm">
+          A mini research agent for hybrid retrieval, paper summarisation, and
+          evidence-backed exploration of engineering research literature.
         </p>
       </div>
 

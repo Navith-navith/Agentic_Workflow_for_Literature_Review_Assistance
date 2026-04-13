@@ -6,7 +6,6 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Cpu, User, ChevronDown, ChevronUp, Shield, AlertTriangle } from "lucide-react";
-import { useState } from "react";
 import { ChatMessage, RetrievalResult } from "@/types";
 
 const INTENT_LABELS: Record<string, { label: string; color: string }> = {
@@ -19,10 +18,19 @@ const INTENT_LABELS: Record<string, { label: string; color: string }> = {
 
 interface Props {
   message: ChatMessage;
+  onToggleResults?: () => void;
+  showResultsPanel?: boolean;
+  showSources?: boolean;
+  onToggleSources?: (messageId: string | null) => void;
 }
 
-export default function MessageBubble({ message }: Props) {
-  const [showSources, setShowSources] = useState(false);
+export default function MessageBubble({
+  message,
+  onToggleResults,
+  showResultsPanel,
+  showSources = false,
+  onToggleSources,
+}: Props) {
   const isUser      = message.role === "user";
   const intentMeta  = message.intent ? INTENT_LABELS[message.intent] : null;
 
@@ -89,16 +97,41 @@ export default function MessageBubble({ message }: Props) {
 
             {/* Sources toggle */}
             {message.sources && message.sources.length > 0 && (
-              <button
-                onClick={() => setShowSources((p) => !p)}
-                className="flex items-center gap-1 text-xs text-[var(--text-muted)]
-                  hover:text-[var(--brand)] transition-colors"
-              >
-                {showSources
-                  ? <><ChevronUp className="w-3 h-3" /> Hide sources</>
-                  : <><ChevronDown className="w-3 h-3" /> {message.sources.length} sources</>
-                }
-              </button>
+              <>
+                <button
+                  onClick={() => {
+                    const willOpen = !showSources;
+                    if (willOpen && showResultsPanel && onToggleResults) {
+                      onToggleResults();
+                    }
+                    onToggleSources?.(willOpen ? message.id : null);
+                  }}
+                  className="flex items-center gap-1 text-xs text-[var(--text-muted)]
+                    hover:text-[var(--brand)] transition-colors"
+                >
+                  {showSources
+                    ? <><ChevronUp className="w-3 h-3" /> Hide sources</>
+                    : <><ChevronDown className="w-3 h-3" /> {message.sources.length} sources</>
+                  }
+                </button>
+                {onToggleResults && (
+                  <button
+                    onClick={() => {
+                      if (!showResultsPanel && onToggleSources) {
+                        onToggleSources(null);
+                      }
+                      onToggleResults();
+                    }}
+                    className="flex items-center gap-1 text-xs text-[var(--text-muted)]
+                      hover:text-[var(--brand)] transition-colors"
+                  >
+                    {showResultsPanel
+                      ? <><ChevronUp className="w-3 h-3" /> Hide results</>
+                      : <><ChevronDown className="w-3 h-3" /> Show results</>
+                    }
+                  </button>
+                )}
+              </>
             )}
 
             {/* Timestamp */}

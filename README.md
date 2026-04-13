@@ -1,8 +1,8 @@
-# 🏥 Agent-Based Hybrid RAG System
-## Intelligent Exploration of Healthcare Engineering Research Papers
+# 🤖 Agentic Workflow for Automated Literature Review Assistance (mini research agent)
+## Automated literature review assistance with hybrid retrieval and agentic reasoning
 
-A production-grade, multi-agent RAG system with hybrid retrieval (semantic + BM25),
-a FastAPI backend, and a Next.js chat frontend.
+A production-grade research assistant that combines hybrid retrieval (semantic + BM25),
+FastAPI backend, and a Next.js chat interface to support evidence-backed review of engineering literature.
 
 ---
 

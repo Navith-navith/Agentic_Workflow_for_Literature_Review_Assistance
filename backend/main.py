@@ -12,6 +12,7 @@ Routes:
 """
 import os
 import shutil
+from datetime import datetime
 from pathlib import Path
 from typing import List
 
@@ -63,6 +64,40 @@ def get_orchestrator() -> AgentOrchestrator:
         raise HTTPException(status_code=503, detail="System initialising, try again shortly")
     return _orchestrator
 
+def print_agent_response_summary(endpoint: str, query_text: str, response: AgentResponse) -> None:
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    warnings = []
+    if isinstance(response.metadata, dict):
+        warnings = response.metadata.get("warnings") or []
+    if warnings is None:
+        warnings = []
+    if not isinstance(warnings, list):
+        warnings = [str(warnings)]
+
+    print("=" * 80)
+    print(f"[{timestamp}] {endpoint} completed")
+    print(f"Query text: {query_text}")
+    print(f"Intent detected: {response.intent}")
+    print(f"Number of chunks retrieved: {len(response.sources)}")
+    print("-")
+    print(f"{'Rank':<5} {'Doc ID':<24} {'Page':<6} {'Semantic':<10} {'BM25':<10} {'Hybrid':<10}")
+    print("-" * 80)
+    for idx, source in enumerate(response.sources, start=1):
+        doc_id = source.chunk.doc_id if source.chunk and getattr(source.chunk, 'doc_id', None) else 'unknown'
+        page = source.chunk.page_number if source.chunk and getattr(source.chunk, 'page_number', None) is not None else 'N/A'
+        print(
+            f"{idx:<5} {doc_id:<24} {page:<6} "
+            f"{source.semantic_score:<10.4f} {source.bm25_score:<10.4f} {source.hybrid_score:<10.4f}"
+        )
+    print("-" * 80)
+    print(f"Confidence score: {response.confidence if response.confidence is not None else 'N/A'}")
+    print("Warnings:")
+    if warnings:
+        for warning in warnings:
+            print(f" - {warning}")
+    else:
+        print(" - None")
+    print("=" * 80)
 
 # ── Routes ────────────────────────────────────────────────────────────────────
 
@@ -124,7 +159,9 @@ async def query(
     - General synthesis queries
     """
     try:
-        return orchestrator.query(req)
+        response = orchestrator.query(req)
+        print_agent_response_summary("/query", req.question, response)
+        return response
     except Exception as e:
         logger.error(f"/query error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -150,7 +187,9 @@ async def summarize(
             detail=f"Documents not found: {missing}. Available: {list(available_ids)}",
         )
     try:
-        return orchestrator.summarize(req)
+        response = orchestrator.summarize(req)
+        print_agent_response_summary("/summarize", req.focus or f"Summarize: {', '.join(req.doc_ids)}", response)
+        return response
     except Exception as e:
         logger.error(f"/summarize error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -172,7 +211,10 @@ async def compare(
     if missing:
         raise HTTPException(status_code=404, detail=f"Documents not found: {missing}")
     try:
-        return orchestrator.compare(req)
+        response = orchestrator.compare(req)
+        aspects = ", ".join(req.aspects) if req.aspects else "default"
+        print_agent_response_summary("/compare", f"Compare docs {', '.join(req.doc_ids)} on {aspects}", response)
+        return response
     except Exception as e:
         logger.error(f"/compare error: {e}")
         raise HTTPException(status_code=500, detail=str(e))

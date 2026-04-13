@@ -27,11 +27,11 @@ html, body {
   background-color: var(--bg-base);
   color:            var(--text-primary);
   font-family:      var(--font-geist-sans), system-ui, sans-serif;
-  height:           100%;
-  overflow:         hidden;
+  min-height:       100%;
+  overflow:         auto;
 }
 
-#__next { height: 100%; }
+#__next { min-height: 100%; }
 
 /* ── Scrollbar ───────────────────────────────────────────────── */
 ::-webkit-scrollbar        { width: 5px; }

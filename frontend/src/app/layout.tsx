@@ -25,9 +25,9 @@ const ibmMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "MedRAG — Healthcare Research Intelligence",
+  title: "Agentic Workflow for Automated Literature Review Assistance (mini research agent)",
   description:
-    "Agent-based hybrid RAG system for intelligent exploration of healthcare engineering research papers",
+    "Agentic workflow for automated literature review assistance with hybrid retrieval and research-aware agentic reasoning.",
   icons: { icon: "/favicon.ico" },
 };
 
